@@ -9,7 +9,7 @@ st.write("Verifique minha disponibilidade e agende seu horário.")
 
 # --- CONFIGURAÇÃO DA ESCALA ---
 # Data de referência: Segunda-feira (04/05/2026), início da sua 'semana cheia'
-DATA_REFERENCIA = datetime(2026, 4, 27).date()
+DATA_REFERENCIA = datetime(2026, 5, 4).date()
 # Coloque seu número com 55 + DDD + Numero (tudo junto)
 SEU_WHATSAPP = "+55 28 999896258" 
 
