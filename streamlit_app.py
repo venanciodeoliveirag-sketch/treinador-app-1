@@ -8,7 +8,7 @@ st.title("💪 Agendamento de Personal Trainer")
 st.write("Verifique minha disponibilidade e agende seu horário.")
 
 # --- CONFIGURAÇÃO DA ESCALA ---
-# Data de referência: Segunda-feira (27/04/2026), início da sua 'semana cheia'
+# Data de referência: Segunda-feira (04/05/2026), início da sua 'semana cheia'
 DATA_REFERENCIA = datetime(2026, 4, 27).date()
 # Coloque seu número com 55 + DDD + Numero (tudo junto)
 SEU_WHATSAPP = "+55 28 999896258" 
@@ -18,7 +18,7 @@ def verificar_disponibilidade(data):
     if data.weekday() == 6:
         return "Domingo - Folga Fixa", False
     
-    # Cálculo da escala 2x2 (Trabalha 2, Folga 2)
+    # Cálculo da escala 2x2 (Trabalha 2 "🚔", Folga 2)
     delta_dias = (data - DATA_REFERENCIA).days
     posicao = delta_dias % 4
     
