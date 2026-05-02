@@ -1,7 +1,7 @@
 import streamlit as st
 from datetime import datetime
 
-st.set_page_config(page_title="Agenda de Personal", page_icon="💪")
+st.set_page_config(page_title="Agenda de Personal", page_icon="Treino.jpg")
 
 # Título do App
 st.title("💪 Agendamento de Personal Trainer")
