@@ -1,7 +1,7 @@
 import streamlit as st
 from datetime import datetime
 
-st.set_page_config(page_title="Agenda de Personal", page_icon="Treino.jpg")
+st.set_page_config(page_title="Agenda de Personal", page_icon="💪")
 
 # Título do App
 st.title("💪 Agendamento de Personal Trainer")
@@ -11,7 +11,7 @@ st.write("Verifique minha disponibilidade e agende seu horário.")
 # Data de referência: Segunda-feira (04/05/2026), início da sua 'semana cheia'
 DATA_REFERENCIA = datetime(2026, 5, 4).date()
 # Coloque seu número com 55 + DDD + Numero (tudo junto)
-SEU_WHATSAPP = "+55 28 999896258" 
+SEU_WHATSAPP = "5528999896258" 
 
 def verificar_disponibilidade(data):
     # Regra do Domingo (Folga fixa)
@@ -36,14 +36,14 @@ if not disponivel:
     st.info("Por favor, escolha outro dia no calendário.")
 else:
     st.success(f"✅ {status}")
-    horarios = ["06:00", "07:00", "08:00", "09:00", "19:00", "20:00", "21:00"]
+    horarios = ["06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00"]
     hora = st.selectbox("Escolha o horário disponível:", horarios)
     nome = st.text_input("Seu nome completo:")
     
     if st.button("Confirmar Check-in"):
         if nome:
             msg = f"Olá! Sou o aluno {nome} e fiz check-in para o dia {data_selecionada.strftime('%d/%m')} às {hora}."
-            link = f"https://wa.me/{SEU_WHATSAPP}?text={msg.replace(' ', '%20')}"
+            link = f"https://wa.me/{SEU_WHATSAPP}?text={msg.replace('urllib.parse', '%20')}"
             st.balloons()
             st.markdown(f'''
                 <a href="{link}" target="_blank">
