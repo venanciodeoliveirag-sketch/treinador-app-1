@@ -72,15 +72,14 @@ def verificar_disponibilidade(data):
 
 
 # ==================================================
-# --- 4. TÍTULO E VITRINE (COM SEU LOGOTIPO) ---
+# --- 4. TÍTULO E VITRINE (COM SEU LOGOTIPO CORRIGIDO) ---
 # ==================================================
-nome_imagem = "1000000052.jpg"
+nome_imagem = "logo.jpg"
 
 if os.path.exists(nome_imagem):
     col1, col2, col3 = st.columns([1, 2, 1]) 
     with col2:
-        # Imagem com bordas arredondadas e fundo branco para destacar no app preto
-        st.markdown(f'<div style="background-color:white; padding:10px; border-radius:15px; text-align:center;"><img src="https://raw.githubusercontent.com/GuilhermeVenancio/AQUI_VAI_O_NOME_DO_SEU_REPOSITORIO/main/logo.jpg" width="100%" style="border-radius:10px;"></div>', unsafe_allow_html=True)
+        # Deixei apenas o comando correto que carrega a imagem limpa e centralizada
         st.image(nome_imagem, use_container_width=True)
 else:
     st.warning(f"⚠️ Imagem '{nome_imagem}' não encontrada no repositório do GitHub.")
