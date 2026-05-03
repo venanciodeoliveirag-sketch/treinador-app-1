@@ -125,3 +125,35 @@ else:
         st.warning("Poxa, todos os horários para este dia já foram preenchidos! 😢")
     else:
         hora = st
+# --- ÁREA DO PROFESSOR (Relatório de Mensalidade) ---
+st.divider()
+with st.expander("📊 Relatório de Frequência (Apenas para o Personal)"):
+    # Carrega os dados e garante que a data seja lida corretamente
+    df_relatorio = carregar_dados()
+    
+    if not df_relatorio.empty:
+        # Converter a coluna Data para o formato de tempo do Python
+        df_relatorio['Data'] = pd.to_datetime(df_relatorio['Data'])
+        
+        # Filtrar pelo mês atual
+        mes_atual = datetime.now().month
+        ano_atual = datetime.now().year
+        df_mes = df_relatorio[(df_relatorio['Data'].dt.month == mes_atual) & (df_relatorio['Data'].dt.year == ano_atual)]
+        
+        if not df_mes.empty:
+            # Conta as ocorrências por nome
+            contagem = df_mes['Nome'].value_counts().reset_index()
+            contagem.columns = ['Aluno', 'Aulas no Mês']
+            
+            st.write(f"### Frequência em {datetime.now().strftime('%B/%Y')}")
+            st.table(contagem)
+            
+            # Opção de ver o histórico detalhado
+            st.write("---")
+            st.write("🔍 **Histórico Detalhado:**")
+            st.dataframe(df_mes.sort_values(by='Data', ascending=False))
+        else:
+            st.info("Ainda não há check-ins registrados neste mês.")
+    else:
+        st.info("A planilha ainda está vazia.")
+
