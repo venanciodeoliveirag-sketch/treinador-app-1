@@ -13,6 +13,7 @@ st.set_page_config(
     layout="centered"
 )
 
+# Estilização visual personalizada
 st.markdown("""
 <style>
     .stApp { background-color: #000000; color: #FFFFFF; }
@@ -46,6 +47,7 @@ def salvar_agendamento(data_str, hora, nome):
         return True
     return False
 
+# Configuração da Escala 2x2
 DATA_REFERENCIA = datetime(2026, 5, 4).date()
 SEU_WHATSAPP = "5528999896258"
 
@@ -106,7 +108,6 @@ if not disponivel_dia:
     st.info("Por favor, escolha um dia marcado com ✅ na previsão acima.")
 else:
     st.markdown(f"<div style='padding: 10px; border-radius: 10px; background-color: #003300; color: white; border: 1px solid #00FF00;'>✅ {status_dia}</div>", unsafe_allow_html=True)
-    st.write("")
     
     df_agendamentos = carregar_dados()
     data_str = data_selecionada.strftime("%Y-%m-%d")
@@ -116,6 +117,7 @@ else:
     else:
         ocupados = []
         
+    # Seus horários atualizados
     horarios_padrao = ["05:00", "06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00"]
     horarios_livres = [h for h in horarios_padrao if h not in ocupados]
     
@@ -125,7 +127,47 @@ else:
         hora = st.selectbox("2️⃣ Escolha o horário disponível:", horarios_livres)
         nome = st.text_input("3️⃣ Digite o seu nome completo:")
 
-        st.write("")
         if st.button("CONFIRMAR CHECK-IN 💪", use_container_width=True):
             if nome:
                 if salvar_agendamento(data_str, hora, nome):
+                    msg = f"Olá! Sou o aluno *{nome}* e fiz check-in para o treino no dia *{data_selecionada.strftime('%d/%m')}* às *{hora}*."
+                    link_wa = f"https://wa.me/{SEU_WHATSAPP}?text={urllib.parse.quote(msg)}"
+                    
+                    st.balloons()
+                    st.success("Horário reservado com sucesso!")
+                    st.markdown(f'''
+                        <a href="{link_wa}" target="_blank">
+                            <button style="width:100%;height:60px;border-radius:15px;background-color:#25d366;color:white;border:none;font-size:18px;font-weight:bold;cursor:pointer;">
+                                📱 NOTIFICAR NO WHATSAPP
+                            </button>
+                        </a>
+                    ''', unsafe_allow_html=True)
+                    st.cache_data.clear()
+            else:
+                st.warning("Por favor, digite seu nome.")
+
+# ==================================================
+# --- 5. ÁREA DO PROFESSOR (RELATÓRIO) ---
+# ==================================================
+st.write("<br><br>", unsafe_allow_html=True)
+st.divider()
+
+with st.expander("📊 Relatório de Frequência (Área Restrita)"):
+    senha = st.text_input("Senha de acesso:", type="password")
+    if senha == "1234":
+        df_relatorio = carregar_dados()
+        if not df_relatorio.empty:
+            df_relatorio['Data'] = pd.to_datetime(df_relatorio['Data'])
+            mes_atual = datetime.now().month
+            df_mes = df_relatorio[df_relatorio['Data'].dt.month == mes_atual]
+            
+            contagem = df_mes['Nome'].value_counts().reset_index()
+            contagem.columns = ['Aluno', 'Aulas no Mês']
+            st.write("### 📈 Resumo do Mês Atual")
+            st.table(contagem)
+            
+            st.write("---")
+            st.write("🔍 **Histórico Detalhado:**")
+            st.dataframe(df_mes.sort_values(by='Data', ascending=False), use_container_width=True)
+    elif senha != "":
+        st.error("Senha incorreta.")
