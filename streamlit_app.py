@@ -7,14 +7,12 @@ import pandas as pd
 st.set_page_config(page_title="Agenda de Personal", page_icon="💪")
 
 # --- CONEXÃO COM GOOGLE SHEETS ---
-# No Streamlit Cloud, terás de colocar o link da folha nos "Secrets"
-# Para testar localmente, podes substituir pelo link direto
-url = "O_TEU_LINK_DO_GOOGLE_SHEETS_AQUI"
+# O Streamlit vai ler automaticamente o link que está no secrets.toml
 conn = st.connection("gsheets", type=GSheetsConnection)
 
 def carregar_dados():
     # Lê a folha de cálculo ignorando linhas vazias
-    return conn.read(spreadsheet=url, usecols=[0, 1, 2]).dropna(how="all")
+    return conn.read(usecols=[0, 1, 2]).dropna(how="all")
 
 def salvar_agendamento(data_str, hora, nome):
     df_existente = carregar_dados()
@@ -24,11 +22,11 @@ def salvar_agendamento(data_str, hora, nome):
     
     if conflito.empty:
         # Cria um novo DataFrame com a nova linha
-        novo_registro = pd.DataFrame([{"Data": data_str, "Hora": hora, "Nome": nome}])
+        novo_registro = pd.DataFrame([{ "Data": data_str, "Hora": hora, "Nome": nome }])
         df_atualizado = pd.concat([df_existente, novo_registro], ignore_index=True)
         
         # Atualiza a folha de cálculo
-        conn.update(spreadsheet=url, data=df_atualizado)
+        conn.update(data=df_atualizado)
         return True
     return False
 
@@ -80,7 +78,7 @@ else:
                     
                     st.balloons()
                     st.success("Agendamento guardado na Planilha!")
-                    st.markdown(f'''
+                    st.markdown(f''' 
                         <a href="{link}" target="_blank">
                             <button style="width:100%;height:50px;border-radius:10px;background-color:#25d366;color:white;border:none;font-weight:bold;cursor:pointer;">
                                 NOTIFICAR PERSONAL NO WHATSAPP
