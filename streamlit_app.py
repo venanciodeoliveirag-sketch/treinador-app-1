@@ -13,7 +13,6 @@ st.set_page_config(
     layout="centered"
 )
 
-# Injetamos CSS para as cores (Preto e Dourado)
 st.markdown("""
 <style>
     .stApp { background-color: #000000; color: #FFFFFF; }
@@ -62,14 +61,13 @@ def verificar_disponibilidade(data):
 
 
 # ==================================================
-# --- 3. INTERFACE E VITRINE (CORRIGIDA) ---
+# --- 3. INTERFACE E VITRINE ---
 # ==================================================
 st.title("💪 Agenda de Treinos")
 st.write("Verifique a minha disponibilidade abaixo e faça o seu check-in.")
 
 st.write("### 📅 Previsão da Semana")
 
-# Estilo inline garantido para não quebrar no celular
 html_vitrine = "<div style='display: flex; justify-content: space-between; padding: 15px; border-radius: 15px; overflow-x: auto; background-color: #111111; border: 1px solid #333333;'>"
 hoje = datetime.today().date()
 
@@ -118,42 +116,16 @@ else:
     else:
         ocupados = []
         
-    horarios_padrao = ["06:00", "07:00", "08:00", "09:00", "19:00", "20:00", "21:00"]
+    horarios_padrao = ["05:00", "06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00"]
     horarios_livres = [h for h in horarios_padrao if h not in ocupados]
     
     if not horarios_livres:
         st.warning("Poxa, todos os horários para este dia já foram preenchidos! 😢")
     else:
-        hora = st
-# --- ÁREA DO PROFESSOR (Relatório de Mensalidade) ---
-st.divider()
-with st.expander("📊 Relatório de Frequência (Apenas para o Personal)"):
-    # Carrega os dados e garante que a data seja lida corretamente
-    df_relatorio = carregar_dados()
-    
-    if not df_relatorio.empty:
-        # Converter a coluna Data para o formato de tempo do Python
-        df_relatorio['Data'] = pd.to_datetime(df_relatorio['Data'])
-        
-        # Filtrar pelo mês atual
-        mes_atual = datetime.now().month
-        ano_atual = datetime.now().year
-        df_mes = df_relatorio[(df_relatorio['Data'].dt.month == mes_atual) & (df_relatorio['Data'].dt.year == ano_atual)]
-        
-        if not df_mes.empty:
-            # Conta as ocorrências por nome
-            contagem = df_mes['Nome'].value_counts().reset_index()
-            contagem.columns = ['Aluno', 'Aulas no Mês']
-            
-            st.write(f"### Frequência em {datetime.now().strftime('%B/%Y')}")
-            st.table(contagem)
-            
-            # Opção de ver o histórico detalhado
-            st.write("---")
-            st.write("🔍 **Histórico Detalhado:**")
-            st.dataframe(df_mes.sort_values(by='Data', ascending=False))
-        else:
-            st.info("Ainda não há check-ins registrados neste mês.")
-    else:
-        st.info("A planilha ainda está vazia.")
+        hora = st.selectbox("2️⃣ Escolha o horário disponível:", horarios_livres)
+        nome = st.text_input("3️⃣ Digite o seu nome completo:")
 
+        st.write("")
+        if st.button("CONFIRMAR CHECK-IN 💪", use_container_width=True):
+            if nome:
+                if salvar_agendamento(data_str, hora, nome):
