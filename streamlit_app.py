@@ -7,6 +7,7 @@ import pandas as pd
 #
 ==================================================
 # --- 1. CONFIGURAÇÃO VISUAL (ESTILO BLACK & GOLD) ---
+#
 ==================================================
 # Mantemos a logomarca aqui na "cara externa" (aba do navegador)
 st.set_page_config(
