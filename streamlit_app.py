@@ -74,7 +74,7 @@ def verificar_disponibilidade(data):
 # ==================================================
 # --- 4. TÍTULO E VITRINE (COM SEU LOGOTIPO CORRIGIDO) ---
 # ==================================================
-nome_imagem = "logo.jpg"
+nome_imagem = "1000000052.jpg"
 
 if os.path.exists(nome_imagem):
     col1, col2, col3 = st.columns([1, 2, 1]) 
