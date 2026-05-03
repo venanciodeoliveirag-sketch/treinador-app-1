@@ -63,13 +63,14 @@ def verificar_disponibilidade(data):
 
 
 # ==================================================
-# --- 3. INTERFACE E VITRINE ---
+# --- 3. INTERFACE E VITRINE (CORRIGIDA) ---
 # ==================================================
 st.title("💪 Agenda de Treinos")
 st.write("Verifique a minha disponibilidade abaixo e faça o seu check-in.")
 
 st.write("### 📅 Previsão da Semana")
 
+# Estilo inline garantido para não quebrar no celular (Tudo em uma única linha Python)
 html_vitrine = "<div style='display: flex; justify-content: space-between; padding: 15px; border-radius: 15px; overflow-x: auto; background-color: #111111; border: 1px solid #333333;'>"
 hoje = datetime.today().date()
 
@@ -83,13 +84,8 @@ for i in range(7):
     else:
         icone = "✅"
         
-    html_vitrine += f"""
-        <div style='text-align: center; min-width: 45px; margin: 0 5px;'>
-            <b style='font-size: 14px;'>{dia_semana_abrev}</b><br>
-            <span style='font-size: 11px; color: gray;'>{dia_previsao.strftime('%d/%m')}</span><br>
-            <span style='font-size: 26px;'>{icone}</span>
-        </div>
-    """
+    # *CRREÇÃO CRUCIAL AQUI:* Everything in one single line for proper mobile rendering
+    html_vitrine += f"<div style='text-align: center; min-width: 45px; margin: 0 5px;'><b style='font-size: 14px;'>{dia_semana_abrev}</b><br><span style='font-size: 11px; color: gray;'>{dia_previsao.strftime('%d/%m')}</span><br><span style='font-size: 26px;'>{icone}</span></div>"
 
 html_vitrine += "</div>"
 st.markdown(html_vitrine, unsafe_allow_html=True)
@@ -108,6 +104,7 @@ if not disponivel_dia:
     st.info("Por favor, escolha um dia marcado com ✅ na previsão acima.")
 else:
     st.markdown(f"<div style='padding: 10px; border-radius: 10px; background-color: #003300; color: white; border: 1px solid #00FF00;'>✅ {status_dia}</div>", unsafe_allow_html=True)
+    st.write("")
     
     df_agendamentos = carregar_dados()
     data_str = data_selecionada.strftime("%Y-%m-%d")
@@ -117,7 +114,7 @@ else:
     else:
         ocupados = []
         
-    # Seus horários atualizados
+    # Seus horários atualizados (05:00 às 15:00)
     horarios_padrao = ["05:00", "06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00"]
     horarios_livres = [h for h in horarios_padrao if h not in ocupados]
     
@@ -127,6 +124,7 @@ else:
         hora = st.selectbox("2️⃣ Escolha o horário disponível:", horarios_livres)
         nome = st.text_input("3️⃣ Digite o seu nome completo:")
 
+        st.write("")
         if st.button("CONFIRMAR CHECK-IN 💪", use_container_width=True):
             if nome:
                 if salvar_agendamento(data_str, hora, nome):
@@ -135,16 +133,20 @@ else:
                     
                     st.balloons()
                     st.success("Horário reservado com sucesso!")
+                    
                     st.markdown(f'''
                         <a href="{link_wa}" target="_blank">
-                            <button style="width:100%;height:60px;border-radius:15px;background-color:#25d366;color:white;border:none;font-size:18px;font-weight:bold;cursor:pointer;">
+                            <button style="width:100%;height:60px;border-radius:15px;background-color:#25d366;color:white;border:none;font-size:18px;font-weight:bold;cursor:pointer;box-shadow: 0 4px 15px rgba(0,255,0,0.3);">
                                 📱 NOTIFICAR NO WHATSAPP
                             </button>
                         </a>
                     ''', unsafe_allow_html=True)
                     st.cache_data.clear()
+                else:
+                    st.error("Erro: Este horário acabou de ser preenchido por outra pessoa.")
             else:
-                st.warning("Por favor, digite seu nome.")
+                st.warning("Por favor, digite o seu nome antes de confirmar.")
+
 
 # ==================================================
 # --- 5. ÁREA DO PROFESSOR (RELATÓRIO) ---
