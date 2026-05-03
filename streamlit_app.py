@@ -5,7 +5,7 @@ from streamlit_gsheets import GSheetsConnection
 import pandas as pd
 
 # Configuração da página
-st.set_page_config(page_title="Agenda de Personal", page_icon="[Treino].jpg")
+st.set_page_config(page_title="Agenda de Personal", page_icon="[Treino].")
 
 # --- CONEXÃO COM GOOGLE SHEETS ---
 conn = st.connection("gsheets", type=GSheetsConnection)
