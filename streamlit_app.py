@@ -4,8 +4,8 @@ import urllib.parse
 from streamlit_gsheets import GSheetsConnection
 import pandas as pd
 
-# Configuração da página
-st.set_page_config(page_title="Agenda de Personal", page_icon="[Treino].")
+# 1. Configuração da aba do navegador (Ícone pequeno)
+st.set_page_config(page_title="Agenda de Personal", page_icon="Treino.jpg")
 
 # --- CONEXÃO COM GOOGLE SHEETS ---
 conn = st.connection("gsheets", type=GSheetsConnection)
@@ -44,12 +44,20 @@ def verificar_disponibilidade(data):
     else:
         return "Disponível para Personal", True
 
-# --- TÍTULO ---
+# ==================================================
+# --- LOGOTIPO E TÍTULO ---
+# ==================================================
+# 2. Mostra a logomarca grande na página (O width=150 controla o tamanho)
+try:
+    st.image("Treino.jpg", width=150)
+except:
+    pass # Caso a imagem demore a carregar, o site não dá erro
+
 st.title("💪 Agendamento de Personal Trainer")
 st.write("Verifique a minha disponibilidade e agende o seu horário.")
 
 # ==================================================
-# --- VITRINE DA SEMANA (CORRIGIDA) ---
+# --- VITRINE DA SEMANA ---
 # ==================================================
 st.write("### 📅 Previsão dos próximos 7 dias:")
 
@@ -66,7 +74,6 @@ for i in range(7):
     else:
         icone = "✅"
         
-    # Tudo na mesma linha para o Streamlit não transformar em bloco de código
     html_vitrine += f"<div style='text-align: center; min-width: 45px; margin: 0 5px;'><b style='font-size: 14px;'>{dia_semana_abrev}</b><br><span style='font-size: 11px; color: gray;'>{dia_previsao.strftime('%d/%m')}</span><br><span style='font-size: 24px;'>{icone}</span></div>"
 
 html_vitrine += "</div>"
@@ -76,12 +83,14 @@ st.divider()
 # --- INTERFACE DE AGENDAMENTO ---
 data_selecionada = st.date_input("Selecione a data da aula no calendário abaixo:", min_value=datetime.today(), format="DD/MM/YYYY")
 
+# 3. CORREÇÃO DA LINHA QUE FALTAVA AQUI:
+status_dia, disponivel_dia = verificar_disponibilidade(data_selecionada)
+
 if not disponivel_dia:
     st.error(f"🚫 {status_dia}")
 else:
     st.success(f"✅ {status_dia}")
     
-    # Carregar agendamentos (Sem o try/except para vermos o erro real se falhar)
     df_agendamentos = carregar_dados()
     data_str = data_selecionada.strftime("%Y-%m-%d")
     
