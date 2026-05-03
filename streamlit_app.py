@@ -74,8 +74,7 @@ st.markdown(html_vitrine, unsafe_allow_html=True)
 st.divider()
 
 # --- INTERFACE DE AGENDAMENTO ---
-data_selecionada = st.date_input("Selecione a data da aula no calendário abaixo:", min_value=datetime.today())
-status_dia, disponivel_dia = verificar_disponibilidade(data_selecionada)
+data_selecionada = st.date_input("Selecione a data da aula no calendário abaixo:", min_value=datetime.today(), format="DD/MM/YYYY")
 
 if not disponivel_dia:
     st.error(f"🚫 {status_dia}")
