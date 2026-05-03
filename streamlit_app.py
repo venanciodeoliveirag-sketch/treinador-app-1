@@ -6,12 +6,12 @@ import pandas as pd
 import os
 
 # ==================================================
-# --- TRADUTOR MANUAL DE MESES ---
+# --- TRADUTOR DE MESES (ÁREA DO PROFESSOR) ---
 # ==================================================
 MESES_PT = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"]
 
 # ==================================================
-# --- 1. CONFIGURAÇÃO VISUAL (ESTILO BLACK & GOLD) ---
+# --- 1. CONFIGURAÇÃO VISUAL (NOVO ESTILO AZUL) ---
 # ==================================================
 st.set_page_config(
     page_title="Agenda de Personal", 
@@ -19,12 +19,13 @@ st.set_page_config(
     layout="centered"
 )
 
+# Cores atualizadas para combinar com o logotipo (Azul e Preto)
 st.markdown("""
 <style>
     .stApp { background-color: #000000; color: #FFFFFF; }
-    h1, h2, h3, b { color: #D4AF37 !important; }
-    .stButton>button { background-color: #D4AF37; color: black; border: none; font-weight: bold; border-radius: 10px; transition: all 0.3s; }
-    .stButton>button:hover { background-color: #FFFFFF; color: black; transform: scale(1.05); }
+    h1, h2, h3, b { color: #0056b3 !important; } /* Azul do Logotipo */
+    .stButton>button { background-color: #0056b3; color: white; border: none; font-weight: bold; border-radius: 10px; transition: all 0.3s; }
+    .stButton>button:hover { background-color: #FFFFFF; color: #0056b3; transform: scale(1.05); }
     .stDateInput div, .stSelectbox div, .stTextInput div { color: black !important; }
     .vitrine-container { display: flex; justify-content: space-between; padding: 15px; border-radius: 15px; overflow-x: auto; background-color: #111111; border: 1px solid #333333; }
 </style>
@@ -71,20 +72,21 @@ def verificar_disponibilidade(data):
 
 
 # ==================================================
-# --- 4. TÍTULO E VITRINE (IMAGEM NOVA NO TOPO) ---
+# --- 4. TÍTULO E VITRINE (COM SEU LOGOTIPO) ---
 # ==================================================
-nome_imagem = "1000000052.jpg"
+nome_imagem = "logo.jpg"
 
 if os.path.exists(nome_imagem):
     col1, col2, col3 = st.columns([1, 2, 1]) 
     with col2:
-        st.image(nome_imagem, width=200)
+        # Imagem com bordas arredondadas e fundo branco para destacar no app preto
+        st.markdown(f'<div style="background-color:white; padding:10px; border-radius:15px; text-align:center;"><img src="https://raw.githubusercontent.com/GuilhermeVenancio/AQUI_VAI_O_NOME_DO_SEU_REPOSITORIO/main/logo.jpg" width="100%" style="border-radius:10px;"></div>', unsafe_allow_html=True)
+        st.image(nome_imagem, use_container_width=True)
 else:
-    st.warning(f"⚠️ Imagem '{nome_imagem}' não encontrada no repositório.")
+    st.warning(f"⚠️ Imagem '{nome_imagem}' não encontrada no repositório do GitHub.")
 
-st.title("💪 Agenda de Treinos")
+st.write("<br>", unsafe_allow_html=True)
 st.write("Verifique a minha disponibilidade abaixo e faça o seu check-in.")
-
 st.write("### 📅 Previsão da Semana")
 
 html_vitrine = "<div class='vitrine-container'>"
@@ -190,7 +192,6 @@ with st.expander("📊 Relatório de Frequência (Área Restrita)"):
                 contagem = df_mes['Nome'].value_counts().reset_index()
                 contagem.columns = ['Aluno', 'Aulas no Mês']
                 
-                # --- APLICAÇÃO DO TRADUTOR DE MESES AQUI ---
                 nome_do_mes_pt = MESES_PT[mes_atual - 1]
                 st.write(f"### 📈 Resumo de {nome_do_mes_pt} de {ano_atual}")
                 
