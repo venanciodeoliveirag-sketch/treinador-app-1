@@ -1,5 +1,5 @@
 import streamlit as st
-from datetime import datetime, timedelta # Adicionado timedelta aqui
+from datetime import datetime, timedelta
 import urllib.parse
 from streamlit_gsheets import GSheetsConnection
 import pandas as pd
@@ -19,7 +19,7 @@ def salvar_agendamento(data_str, hora, nome):
     if conflito.empty:
         novo_registro = pd.DataFrame([{"Data": data_str, "Hora": hora, "Nome": nome}])
         df_atualizado = pd.concat([df_existente, novo_registro], ignore_index=True)
-        # Atenção: O nome da conexão nos secrets deve estar apontando para a sua planilha
+        # Atenção: As credenciais JSON devem estar configuradas nos Secrets para funcionar
         conn.update(data=df_atualizado) 
         return True
     return False
@@ -42,13 +42,13 @@ def verificar_disponibilidade(data):
 st.title("💪 Agendamento de Personal Trainer")
 st.write("Verifique minha disponibilidade e agende seu horário.")
 
-
 # ==========================================
-# --- VITRINE DA SEMANA (CÓDIGO NOVO AQUI) ---
+# --- VITRINE DA SEMANA (HORIZONTAL NO CELULAR) ---
 # ==========================================
 st.write("### 📅 Previsão dos próximos 7 dias:")
 
-colunas_dias = st.columns(7)
+# Cria um container flexível que força os itens a ficarem lado a lado
+html_vitrine = "<div style='display: flex; justify-content: space-between; padding: 10px; border-radius: 10px; overflow-x: auto;'>"
 hoje = datetime.today().date()
 
 for i in range(7):
@@ -56,20 +56,18 @@ for i in range(7):
     status_prev, disponivel_prev = verificar_disponibilidade(dia_previsao)
     dia_semana = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"][dia_previsao.weekday()]
     
-    with colunas_dias[i]:
-        st.markdown(f"<div style='text-align: center; font-size: 14px;'><b>{dia_semana}</b><br>{dia_previsao.strftime('%d/%m')}</div>", unsafe_allow_html=True)
+    if not disponivel_prev:
+        icone = "🏖️" if dia_previsao.weekday() == 6 else "🚔"
+    else:
+        icone = "✅"
         
-        if not disponivel_prev:
-            if dia_previsao.weekday() == 6:
-                st.markdown("<div style='text-align: center; font-size: 24px;'>🏖️</div>", unsafe_allow_html=True)
-            else:
-                st.markdown("<div style='text-align: center; font-size: 24px;'>🚔</div>", unsafe_allow_html=True)
-        else:
-            st.markdown("<div style='text-align: center; font-size: 24px;'>✅</div>", unsafe_allow_html=True)
+    html_vitrine += f"<div style='text-align: center; min-width: 40px;'><b style='font-size: 14px;'>{dia_semana}</b><br><span style='font-size: 12px; color: gray;'>{dia_previsao.strftime('%d/%m')}</span><br><span style='font-size: 22px;'>{icone}</span></div>"
+
+html_vitrine += "</div>"
+st.markdown(html_vitrine, unsafe_allow_html=True)
 
 st.divider() 
 # ==========================================
-
 
 # --- INTERFACE (Escolha de Data) ---
 data_selecionada = st.date_input("Selecione a data da aula no calendário abaixo:", min_value=datetime.today())
