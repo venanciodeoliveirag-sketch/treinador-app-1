@@ -10,7 +10,7 @@ import pandas as pd
 # Voltei para o Treino.jpg para o seu celular puxar a logomarca certa
 st.set_page_config(
     page_title="Agenda de Personal", 
-    page_icon="Treino.jpg", 
+    page_icon="treino.jpg", 
     layout="centered"
 )
 
